@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventory Management System</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="/css/tailwind.css"></script>
+  <!-- Vue 3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <!-- Vue Router CDN -->
+  <script src="https://unpkg.com/vue-router@4"></script>
+</head>
+<body class="bg-gray-100 min-h-screen font-sans text-gray-800">
+
+<div id="app">
+  <!-- Master Navbar -->
+  <nav class="bg-indigo-600 text-white px-6 py-4 shadow-md flex justify-between items-center mb-6">
+    <span class="font-bold text-lg tracking-wide">📦 Inventory Dashboard</span>
+    <div class="space-x-4">
+      <router-link to="/user-accounts" class="hover:bg-indigo-700 px-3 py-2 rounded-md transition font-medium">Users</router-link>
+      <router-link to="/user-roles" class="hover:bg-indigo-700 px-3 py-2 rounded-md transition font-medium">Roles</router-link>
+      <router-link to="/customers" class="hover:bg-indigo-700 px-3 py-2 rounded-md transition font-medium">Customers</router-link>
+      <router-link to="/suppliers" class="hover:bg-indigo-700 px-3 py-2 rounded-md transition font-medium">Suppliers</router-link>
+      <router-link to="/batches" class="hover:bg-indigo-700 px-3 py-2 rounded-md transition font-medium">Batches</router-link>
+    </div>
+  </nav>
+
+  <!-- Dynamic Page View Renderer -->
+  <router-view></router-view>
+</div>
+
+<!-- Import Your External JS Component File -->
+<script src="/js/components/user-accounts.js"></script>
+<script src="/js/components/user-roles.js"></script>
+<script src="/js/components/customers.js"></script>
+<script src="/js/components/suppliers.js"></script>
+<script src="/js/components/batches.js"></script>
+
+<!-- Configure Router and Mount App -->
+<script>
+  const routes = [
+    { path: '/user-accounts', component: UserAccountView },
+    { path: '/user-roles', component: UserRoleView },
+    { path: '/customers', component: CustomerView },
+    { path: '/suppliers', component: SupplierView },
+    { path: '/batches', component: BatchView },
+    { path: '/', redirect: '/home' } // Auto-redirect root to home
+  ];
+
+  const router = VueRouter.createRouter({
+    history: VueRouter.createWebHistory(),
+    routes
+  });
+
+  const { createApp } = Vue;
+  const app = createApp({});
+  app.use(router);
+  app.mount('#app');
+</script>
+</body>
+</html>
