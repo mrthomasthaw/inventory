@@ -25,9 +25,9 @@ public class BatchResponseDto {
 
     private RecordStatus status;
 
-    private LocalDateTime createTime;
+    private LocalDateTime createdTime;
 
-    private LocalDateTime updateTime;
+    private LocalDateTime updatedTime;
 
     public static BatchResponseDto toDto(Batch entity) {
         return BatchResponseDto.builder()
@@ -36,8 +36,8 @@ public class BatchResponseDto {
                 .name(entity.getName())
                 .status(RecordStatus.getByCode(entity.getStatus())
                         .orElse(null))
-                .createTime(entity.getCreatedTime())
-                .updateTime(entity.getUpdatedTime())
+                .createdTime(entity.getCreatedTime())
+                .updatedTime(entity.getUpdatedTime())
                 .build();
     }
 }

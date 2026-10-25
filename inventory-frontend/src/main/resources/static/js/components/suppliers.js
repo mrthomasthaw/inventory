@@ -122,6 +122,7 @@ const SupplierView = {
                                     <th class="p-3">Name</th>
                                     <th class="p-3">Address</th>
                                     <th class="p-3">Status</th>
+                                    <th class="p-3">Created At</th>
                                     <th class="p-3 pr-4 text-right">Actions</th>
                                 </tr>
                             </thead>
@@ -146,6 +147,7 @@ const SupplierView = {
                                             {{ supplier.status ? supplier.status.desc : 'Unknown' }}
                                         </span>
                                     </td>
+                                    <td class="p-3 text-xs text-gray-500">{{ formatDate(supplier.createdTime) }}</td>
                                     <td class="p-3 pr-4 text-right">
                                         <button @click="editSupplier(supplier)" 
                                                 class="text-xs bg-gray-100 hover:bg-indigo-50 text-indigo-600 font-medium px-3 py-1.5 rounded-md transition border border-gray-200">
@@ -261,6 +263,11 @@ const SupplierView = {
         changePage(direction) {
             this.currentPage += direction;
             this.searchSuppliers();
+        },
+        formatDate(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         },
 
         async submitForm() {

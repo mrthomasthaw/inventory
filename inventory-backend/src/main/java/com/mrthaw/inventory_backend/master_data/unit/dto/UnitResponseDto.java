@@ -24,9 +24,9 @@ public class UnitResponseDto {
 
     private RecordStatus status;
 
-    private LocalDateTime createTime;
+    private LocalDateTime createdTime;
 
-    private LocalDateTime updateTime;
+    private LocalDateTime updatedTime;
 
     public static UnitResponseDto toDto(Unit entity) {
         return UnitResponseDto.builder()
@@ -35,8 +35,8 @@ public class UnitResponseDto {
                 .name(entity.getName())
                 .status(RecordStatus.getByCode(entity.getStatus())
                         .orElse(null))
-                .createTime(entity.getCreatedTime())
-                .updateTime(entity.getUpdatedTime())
+                .createdTime(entity.getCreatedTime())
+                .updatedTime(entity.getUpdatedTime())
                 .build();
     }
 }

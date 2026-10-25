@@ -109,17 +109,18 @@ const BatchView = {
                                     <th class="p-3">Code</th>
                                     <th class="p-3">Name</th>
                                     <th class="p-3">Status</th>
+                                    <th class="p-3">Created At</th>
                                     <th class="p-3 pr-4 text-right">Actions</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
                                 <tr v-if="filteredBatches.length === 0">
-                                    <td colspan="5" class="text-center py-12 text-gray-400">
+                                    <td colspan="6" class="text-center py-12 text-gray-400">
                                         No batches found.
                                     </td>
                                 </tr>
                                 <tr v-for="(batch, index) in filteredBatches" :key="batch.id" class="hover:bg-gray-50 transition">
-                                    <td class="p-3 pl-4 font-mono text-xs text-gray-500">{{ index + 1 }}</td> <!-- Displays 1, 2, 3... -->
+                                    <td class="p-3 pl-4 font-mono text-xs text-gray-500">{{ index + 1 }}</td>
                                     <td class="p-3 font-mono font-medium text-indigo-600">{{ batch.code }}</td>
                                     <td class="p-3 text-gray-900 font-medium">{{ batch.name }}</td>
                                     <td class="p-3">
@@ -131,6 +132,7 @@ const BatchView = {
                                             {{ getStatusLabel(batch.status) }}
                                         </span>
                                     </td>
+                                    <td class="p-3 text-xs text-gray-500">{{ formatDate(batch.createdTime) }}</td>
                                     <td class="p-3 pr-4 text-right">
                                         <button @click="editBatch(batch)" 
                                                 class="text-xs bg-gray-100 hover:bg-indigo-50 text-indigo-600 font-medium px-3 py-1.5 rounded-md transition border border-gray-200">
@@ -201,6 +203,12 @@ const BatchView = {
             if (code === 1) return 'Active';
             if (code === 2) return 'Inactive';
             return 'Unknown';
+        },
+
+        formatDate(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         },
 
         async fetchBatches() {

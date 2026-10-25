@@ -23,6 +23,7 @@
       <router-link to="/customers" class="hover:bg-indigo-700 px-3 py-2 rounded-md transition font-medium">Customers</router-link>
       <router-link to="/suppliers" class="hover:bg-indigo-700 px-3 py-2 rounded-md transition font-medium">Suppliers</router-link>
       <router-link to="/batches" class="hover:bg-indigo-700 px-3 py-2 rounded-md transition font-medium">Batches</router-link>
+      <router-link to="/units" class="hover:bg-indigo-700 px-3 py-2 rounded-md transition font-medium">Units</router-link>
     </div>
   </nav>
 
@@ -36,6 +37,7 @@
 <script src="/js/components/customers.js"></script>
 <script src="/js/components/suppliers.js"></script>
 <script src="/js/components/batches.js"></script>
+<script src="/js/components/units.js"></script>
 
 <!-- Configure Router and Mount App -->
 <script>
@@ -45,6 +47,7 @@
     { path: '/customers', component: CustomerView },
     { path: '/suppliers', component: SupplierView },
     { path: '/batches', component: BatchView },
+    { path: '/units', component: UnitView },
     { path: '/', redirect: '/home' } // Auto-redirect root to home
   ];
 
