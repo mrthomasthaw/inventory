@@ -7,9 +7,9 @@
   <!-- Tailwind CSS CDN -->
   <script src="/css/tailwind.css"></script>
   <!-- Vue 3 CDN -->
-  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="/js/vue/vue.global.js"></script>
   <!-- Vue Router CDN -->
-  <script src="https://unpkg.com/vue-router@4"></script>
+  <script src="/js/vue/vue-router.global.js"></script>
 </head>
 <body class="bg-gray-100 min-h-screen font-sans text-gray-800">
 
@@ -24,6 +24,7 @@
       <router-link to="/suppliers" class="hover:bg-indigo-700 px-3 py-2 rounded-md transition font-medium">Suppliers</router-link>
       <router-link to="/batches" class="hover:bg-indigo-700 px-3 py-2 rounded-md transition font-medium">Batches</router-link>
       <router-link to="/units" class="hover:bg-indigo-700 px-3 py-2 rounded-md transition font-medium">Units</router-link>
+      <router-link to="/items" class="hover:bg-indigo-700 px-3 py-2 rounded-md transition font-medium">Items</router-link>
     </div>
   </nav>
 
@@ -38,6 +39,7 @@
 <script src="/js/components/suppliers.js"></script>
 <script src="/js/components/batches.js"></script>
 <script src="/js/components/units.js"></script>
+<script src="/js/components/items.js"></script>
 
 <!-- Configure Router and Mount App -->
 <script>
@@ -48,6 +50,7 @@
     { path: '/suppliers', component: SupplierView },
     { path: '/batches', component: BatchView },
     { path: '/units', component: UnitView },
+    { path: '/items', component: ItemView },
     { path: '/', redirect: '/home' } // Auto-redirect root to home
   ];
 

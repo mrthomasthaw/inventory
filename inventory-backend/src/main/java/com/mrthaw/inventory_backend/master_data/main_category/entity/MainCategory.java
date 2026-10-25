@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Builder
@@ -24,4 +25,8 @@ public class MainCategory extends AuditingEntity {
     private String code;
 
     private Integer status;
+
+    public MainCategory(Long id) {
+        this.id = id;
+    }
 }

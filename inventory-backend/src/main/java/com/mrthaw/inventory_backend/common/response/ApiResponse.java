@@ -39,4 +39,8 @@ public class ApiResponse<T> {
     public static ApiResponse<List<String>> validationError(List<String> errorList) {
         return new ApiResponse<>(ApiResponseCode.VALIDATION_FAIL.getCode(), ApiResponseCode.VALIDATION_FAIL.getDesc(), errorList);
     }
+
+    public static ApiResponse<String> duplicateDataError() {
+        return new ApiResponse<>(ApiResponseCode.DUPLICATE_DATA.getCode(), ApiResponseCode.DUPLICATE_DATA.getDesc(), null);
+    }
 }

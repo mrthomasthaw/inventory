@@ -8,7 +8,9 @@ import javax.tools.Diagnostic;
 public enum ApiResponseCode {
 
     SUCCESS(91, "success"),
-    VALIDATION_FAIL(-31, "invalid input") ;
+    VALIDATION_FAIL(-31, "invalid input"),
+    DUPLICATE_DATA(-24, "duplicate data");
+
     int code;
     String desc;
 

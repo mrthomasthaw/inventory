@@ -1,5 +1,6 @@
 package com.mrthaw.inventory_backend.common.handler;
 
+import com.mrthaw.inventory_backend.common.exception.DuplicateDataException;
 import com.mrthaw.inventory_backend.common.response.ApiResponse;
 import com.mrthaw.inventory_backend.common.util.CommonUtils;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ApiResponse<List<String>> handleException(MethodArgumentNotValidException er) {
         return ApiResponse.validationError(CommonUtils.convertToErrorList(er));
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DuplicateDataException.class)
+    public ApiResponse<String> handleException(DuplicateDataException er) {
+        return ApiResponse.duplicateDataError();
     }
 
 }

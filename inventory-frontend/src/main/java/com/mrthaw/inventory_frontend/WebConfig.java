@@ -33,5 +33,8 @@ public class WebConfig implements WebMvcConfigurer {
 
         registry.addViewController("/units")
                 .setViewName("index");
+
+        registry.addViewController("/items")
+                .setViewName("index");
     }
 }
