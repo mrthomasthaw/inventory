@@ -43,4 +43,12 @@ public class ApiResponse<T> {
     public static ApiResponse<String> duplicateDataError() {
         return new ApiResponse<>(ApiResponseCode.DUPLICATE_DATA.getCode(), ApiResponseCode.DUPLICATE_DATA.getDesc(), null);
     }
+
+    public static ApiResponse<Void> internalServerError() {
+        return new ApiResponse<>(ApiResponseCode.INTERNAL_SERVER_ERROR.getCode(), ApiResponseCode.INTERNAL_SERVER_ERROR.getDesc(), null);
+    }
+
+    public static ApiResponse<String> invalidFormStatusError() {
+        return new ApiResponse<>(ApiResponseCode.INVALID_FORM_STATUS.getCode(), ApiResponseCode.INVALID_FORM_STATUS.getDesc(), null);
+    }
 }

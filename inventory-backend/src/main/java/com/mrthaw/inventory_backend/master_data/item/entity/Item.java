@@ -4,6 +4,7 @@ import com.mrthaw.inventory_backend.common.entity.AuditingEntity;
 import com.mrthaw.inventory_backend.master_data.main_category.entity.MainCategory;
 import com.mrthaw.inventory_backend.master_data.unit.entity.Unit;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity
@@ -32,4 +33,8 @@ public class Item extends AuditingEntity {
 
     @ManyToOne
     private Unit unit;
+
+    public Item(Long id) {
+        this.id = id;
+    }
 }
