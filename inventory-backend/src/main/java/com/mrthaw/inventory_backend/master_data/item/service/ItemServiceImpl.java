@@ -38,8 +38,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public PageResult<ItemResponseDto> searchItems(ItemSearchRequestDto searchRequestDto) {
         return PageResult.toPageResult(itemRepo.findAll(
-                ItemSpecification.createSearchSpecification(searchRequestDto)
-                , PageResult.createPageable(searchRequestDto, Sort.by("id").descending())), ItemResponseDto::toDto);
+                ItemSpecification.createSearchSpecification(searchRequestDto),
+                PageResult.createPageable(searchRequestDto, Sort.by("id").descending())), ItemResponseDto::toDto);
     }
 
 
