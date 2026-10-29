@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 
 @Entity
 @Getter
-@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,7 +26,7 @@ public class PurchaseOrderItem extends AuditingEntity {
     private PurchaseOrder purchaseOrder;
 
     @Column(nullable = false)
-    @DecimalMin(value = "0.01")
+    @DecimalMin(value = "1")
     private BigDecimal price;
 
     @Column(nullable = false)

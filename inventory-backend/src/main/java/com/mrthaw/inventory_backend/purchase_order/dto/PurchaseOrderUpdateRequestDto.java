@@ -1,5 +1,6 @@
 package com.mrthaw.inventory_backend.purchase_order.dto;
 
+import com.mrthaw.inventory_backend.purchase_order.validator.annotation.UniqueItemList;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -19,5 +20,6 @@ public class PurchaseOrderUpdateRequestDto {
     private Long supplierId;
 
     @Valid
+    @UniqueItemList(message = "Duplicate item list")
     private List<PurchaseOrderItemCreateRequestDto> itemList = new ArrayList<>();
 }

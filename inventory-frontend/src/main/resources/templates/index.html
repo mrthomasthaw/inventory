@@ -25,6 +25,7 @@
       <router-link to="/batches" class="hover:bg-indigo-700 px-3 py-2 rounded-md transition font-medium">Batches</router-link>
       <router-link to="/units" class="hover:bg-indigo-700 px-3 py-2 rounded-md transition font-medium">Units</router-link>
       <router-link to="/items" class="hover:bg-indigo-700 px-3 py-2 rounded-md transition font-medium">Items</router-link>
+      <router-link to="/purchase-orders" class="hover:bg-indigo-700 px-3 py-2 rounded-md transition font-medium">Purchase Orders</router-link>
     </div>
   </nav>
 
@@ -40,6 +41,7 @@
 <script src="/js/components/batches.js"></script>
 <script src="/js/components/units.js"></script>
 <script src="/js/components/items.js"></script>
+<script src="/js/components/purchase-orders.js"></script>
 
 <!-- Configure Router and Mount App -->
 <script>
@@ -51,6 +53,7 @@
     { path: '/batches', component: BatchView },
     { path: '/units', component: UnitView },
     { path: '/items', component: ItemView },
+    { path: '/purchase-orders', component: PurchaseOrderView },
     { path: '/', redirect: '/home' } // Auto-redirect root to home
   ];
 

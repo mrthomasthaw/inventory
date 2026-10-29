@@ -12,7 +12,9 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -90,5 +92,9 @@ public class PurchaseOrder extends AuditingEntity {
         purchaseOrderItems.clear();
 
         addAllItems(itemList);
+    }
+
+    public List<PurchaseOrderItem> getItems() {
+        return Collections.unmodifiableList(purchaseOrderItems);
     }
 }

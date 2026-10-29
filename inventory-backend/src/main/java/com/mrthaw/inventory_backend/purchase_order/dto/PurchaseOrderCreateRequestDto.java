@@ -1,5 +1,6 @@
 package com.mrthaw.inventory_backend.purchase_order.dto;
 
+import com.mrthaw.inventory_backend.purchase_order.validator.annotation.UniqueItemList;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -26,5 +27,6 @@ public class PurchaseOrderCreateRequestDto {
 
     @Valid
     @NotEmpty(message = "Purchase order item is required")
+    @UniqueItemList(message = "Duplicate item list")
     private List<PurchaseOrderItemCreateRequestDto> itemList = new ArrayList<>();
 }

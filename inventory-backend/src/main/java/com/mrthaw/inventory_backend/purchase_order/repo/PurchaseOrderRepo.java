@@ -17,4 +17,8 @@ public interface PurchaseOrderRepo extends JpaRepository<PurchaseOrder, Long>, J
     @Override
     @EntityGraph(attributePaths = "supplier")
     Page<PurchaseOrder> findAll(Specification<PurchaseOrder> spec, Pageable pageable);
+
+    @Override
+    @EntityGraph(attributePaths = "purchaseOrderItems")
+    Optional<PurchaseOrder> findById(Long purchaseOrderId);
 }

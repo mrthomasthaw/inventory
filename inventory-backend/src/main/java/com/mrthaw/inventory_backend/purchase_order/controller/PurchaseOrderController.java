@@ -2,10 +2,7 @@ package com.mrthaw.inventory_backend.purchase_order.controller;
 
 import com.mrthaw.inventory_backend.common.response.ApiResponse;
 import com.mrthaw.inventory_backend.common.util.PageResult;
-import com.mrthaw.inventory_backend.purchase_order.dto.PurchaseOrderCreateRequestDto;
-import com.mrthaw.inventory_backend.purchase_order.dto.PurchaseOrderResponseDto;
-import com.mrthaw.inventory_backend.purchase_order.dto.PurchaseOrderSearchRequestDto;
-import com.mrthaw.inventory_backend.purchase_order.dto.PurchaseOrderUpdateRequestDto;
+import com.mrthaw.inventory_backend.purchase_order.dto.*;
 import com.mrthaw.inventory_backend.purchase_order.service.PurchaseOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +17,11 @@ import java.util.Map;
 public class PurchaseOrderController {
 
     private final PurchaseOrderService purchaseOrderService;
+
+    @GetMapping("/{id}")
+    public ApiResponse<PurchaseOrderDetailResponseDto> getPurchaseOrder(@PathVariable("id") Long purchaseOrderId) {
+        return ApiResponse.success(purchaseOrderService.findById(purchaseOrderId));
+    }
 
     @PostMapping("/search")
     public ApiResponse<PageResult<PurchaseOrderResponseDto>> searchPurchaseOrders(@RequestBody PurchaseOrderSearchRequestDto searchRequestDto) {

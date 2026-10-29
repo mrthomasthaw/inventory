@@ -81,4 +81,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
         purchaseOrderRepo.save(purchaseOrder);
     }
+
+    @Override
+    public PurchaseOrderDetailResponseDto findById(Long purchaseOrderId) {
+        return purchaseOrderRepo.findById(purchaseOrderId)
+                .map(PurchaseOrderDetailResponseDto::toDto)
+                .orElseThrow(() -> new DataNotFoundException("Purchase order not found"));
+    }
 }
