@@ -37,7 +37,7 @@ public class PurchaseOrderDetailResponseDto {
 
     private LocalDateTime updatedTime;
 
-    private List<PurchaseOrderItemCreateRequestDto> itemList = new ArrayList<>();
+    private List<PurchaseOrderItemRequestDto> itemList = new ArrayList<>();
 
     public static PurchaseOrderDetailResponseDto toDto(PurchaseOrder entity) {
 
@@ -54,7 +54,7 @@ public class PurchaseOrderDetailResponseDto {
                 .updatedTime(entity.getUpdatedTime())
                 .itemList(entity.getItems()
                         .stream()
-                        .map(PurchaseOrderItemCreateRequestDto::toDto)
+                        .map(PurchaseOrderItemRequestDto::toDto)
                         .toList())
                 .build();
     }

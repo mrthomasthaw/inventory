@@ -3,9 +3,8 @@ package com.mrthaw.inventory_backend.purchase_order.entity;
 import com.mrthaw.inventory_backend.common.entity.AuditingEntity;
 import com.mrthaw.inventory_backend.master_data.business_partner.entity.BusinessPartner;
 import com.mrthaw.inventory_backend.master_data.item.entity.Item;
-import com.mrthaw.inventory_backend.purchase_order.dto.PurchaseOrderItemCreateRequestDto;
+import com.mrthaw.inventory_backend.purchase_order.dto.PurchaseOrderItemRequestDto;
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
 
@@ -14,7 +13,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -58,7 +56,7 @@ public class PurchaseOrder extends AuditingEntity {
         this.id = id;
     }
 
-    public void addItem(PurchaseOrderItemCreateRequestDto itemDto) {
+    public void addItem(PurchaseOrderItemRequestDto itemDto) {
 
         PurchaseOrderItem item = PurchaseOrderItem.builder()
                 .item(new Item(itemDto.getItemId()))
@@ -84,11 +82,11 @@ public class PurchaseOrder extends AuditingEntity {
 
     }
 
-    public void addAllItems(List<PurchaseOrderItemCreateRequestDto> itemList) {
+    public void addAllItems(List<PurchaseOrderItemRequestDto> itemList) {
         itemList.forEach(this::addItem);
     }
 
-    public void updateAllItems(List<PurchaseOrderItemCreateRequestDto> itemList) {
+    public void updateAllItems(List<PurchaseOrderItemRequestDto> itemList) {
         purchaseOrderItems.clear();
 
         addAllItems(itemList);

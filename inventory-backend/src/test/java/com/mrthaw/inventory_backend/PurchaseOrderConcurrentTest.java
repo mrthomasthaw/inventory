@@ -1,8 +1,7 @@
 package com.mrthaw.inventory_backend;
 
 import com.mrthaw.inventory_backend.purchase_order.dto.PurchaseOrderCreateRequestDto;
-import com.mrthaw.inventory_backend.purchase_order.dto.PurchaseOrderItemCreateRequestDto;
-import com.mrthaw.inventory_backend.purchase_order.repo.PurchaseOrderRepo;
+import com.mrthaw.inventory_backend.purchase_order.dto.PurchaseOrderItemRequestDto;
 import com.mrthaw.inventory_backend.purchase_order.service.PurchaseOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -59,9 +58,9 @@ public class PurchaseOrderConcurrentTest {
         log.info("....concurrent test end...");
     }
 
-    private List<PurchaseOrderItemCreateRequestDto> createPOItemList() {
-        List<PurchaseOrderItemCreateRequestDto> itemList = new ArrayList<>();
-        PurchaseOrderItemCreateRequestDto item1 = PurchaseOrderItemCreateRequestDto.builder()
+    private List<PurchaseOrderItemRequestDto> createPOItemList() {
+        List<PurchaseOrderItemRequestDto> itemList = new ArrayList<>();
+        PurchaseOrderItemRequestDto item1 = PurchaseOrderItemRequestDto.builder()
                 .itemId(1L)
                 .price(new BigDecimal(300))
                 .qty(new BigDecimal("0.5"))

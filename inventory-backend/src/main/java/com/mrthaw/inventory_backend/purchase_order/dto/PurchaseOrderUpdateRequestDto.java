@@ -21,5 +21,5 @@ public class PurchaseOrderUpdateRequestDto {
 
     @Valid
     @UniqueItemList(message = "Duplicate item list")
-    private List<PurchaseOrderItemCreateRequestDto> itemList = new ArrayList<>();
+    private List<PurchaseOrderItemRequestDto> itemList = new ArrayList<>();
 }

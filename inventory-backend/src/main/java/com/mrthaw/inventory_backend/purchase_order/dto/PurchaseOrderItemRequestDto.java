@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class PurchaseOrderItemCreateRequestDto {
+public class PurchaseOrderItemRequestDto {
 
     private Long id;
 
@@ -30,8 +30,8 @@ public class PurchaseOrderItemCreateRequestDto {
     @DecimalMin(value = "0.01")
     private BigDecimal qty;
 
-    public static PurchaseOrderItemCreateRequestDto toDto(PurchaseOrderItem entity) {
-        return PurchaseOrderItemCreateRequestDto.builder()
+    public static PurchaseOrderItemRequestDto toDto(PurchaseOrderItem entity) {
+        return PurchaseOrderItemRequestDto.builder()
                 .id(entity.getId())
                 .itemId(entity.getItem().getId())
                 .price(entity.getPrice())
