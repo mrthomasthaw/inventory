@@ -1,16 +1,17 @@
-package com.mrthaw.inventory_backend.goods_received;
+package com.mrthaw.inventory_backend.goods_received.entity;
 
 import com.mrthaw.inventory_backend.common.entity.AuditingEntity;
+import com.mrthaw.inventory_backend.goods_received.dto.GoodsReceivedItemRequestDto;
 import com.mrthaw.inventory_backend.master_data.item.entity.Item;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+
 
 @Builder
 @AllArgsConstructor
@@ -28,52 +29,43 @@ public class GoodsReceived extends AuditingEntity {
 
     private LocalDate goodsReceivedDate;
 
-    @NotNull
+    @Column(nullable = false)
     private Long purchaseOrderId;
+
+    private Integer formStatus;
 
     @Version
     private Long version;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<GoodsReceivedItem> goodsReceivedItems = new ArrayList<>();
+    @Builder.Default
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "goodsReceived")
+    private List<GoodsReceivedItem> goodsReceivedItems = new ArrayList<>(); // Note this initialization will be skipped if you don't put @Builder.Default resulting in null
 
     public void addItem(GoodsReceivedItemRequestDto itemDto) {
 
         GoodsReceivedItem item = GoodsReceivedItem.builder()
                 .item(new Item(itemDto.getItemId()))
-                .price(itemDto.getPrice())
                 .qty(itemDto.getQty())
-                .totalAmount(itemDto.getPrice().multiply(itemDto.getQty()))
-                .purchaseOrder(this)
+                .goodsReceived(this)
                 .build();
 
         goodsReceivedItems.add(item);
-
-        recalculateTotal();
     }
 
-    public void recalculateTotal() {
-        this.totalQty = this.purchaseOrderItems.stream()
-                .map(PurchaseOrderItem::getQty)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        this.totalAmount = this.purchaseOrderItems.stream()
-                .map(PurchaseOrderItem::getTotalAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-    }
-
-    public void addAllItems(List<PurchaseOrderItemCreateRequestDto> itemList) {
+    public void addAllItems(List<GoodsReceivedItemRequestDto> itemList) {
         itemList.forEach(this::addItem);
     }
 
-    public void updateAllItems(List<PurchaseOrderItemCreateRequestDto> itemList) {
-        purchaseOrderItems.clear();
+    public void updateAllItems(List<GoodsReceivedItemRequestDto> itemList) {
+        goodsReceivedItems.clear();
 
         addAllItems(itemList);
     }
 
-    public List<PurchaseOrderItem> getItems() {
-        return Collections.unmodifiableList(purchaseOrderItems);
+    public List<GoodsReceivedItem> getItems() {
+        return Collections.unmodifiableList(goodsReceivedItems);
     }
 }

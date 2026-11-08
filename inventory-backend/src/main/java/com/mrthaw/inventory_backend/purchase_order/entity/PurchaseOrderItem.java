@@ -37,4 +37,13 @@ public class PurchaseOrderItem extends AuditingEntity {
     @DecimalMin(value = "0.01")
     private BigDecimal totalAmount;
 
+    @Column(nullable = false)
+    private BigDecimal receivedQty;
+
+    //Only the same package class can access
+    void addReceivedQty(BigDecimal qty) {
+        if(receivedQty == null) receivedQty = BigDecimal.ZERO;
+
+        receivedQty = receivedQty.add(qty);
+    }
 }

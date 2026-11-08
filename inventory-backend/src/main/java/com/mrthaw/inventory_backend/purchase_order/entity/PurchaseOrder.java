@@ -1,26 +1,27 @@
 package com.mrthaw.inventory_backend.purchase_order.entity;
 
 import com.mrthaw.inventory_backend.common.entity.AuditingEntity;
+import com.mrthaw.inventory_backend.common.entity.BaseEntity;
+import com.mrthaw.inventory_backend.common.enum_constant.FormStatus;
 import com.mrthaw.inventory_backend.master_data.business_partner.entity.BusinessPartner;
 import com.mrthaw.inventory_backend.master_data.item.entity.Item;
 import com.mrthaw.inventory_backend.purchase_order.dto.PurchaseOrderItemRequestDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PurchaseOrder extends AuditingEntity {
+public class PurchaseOrder extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,8 +50,6 @@ public class PurchaseOrder extends AuditingEntity {
     @Getter(AccessLevel.NONE)
     private List<PurchaseOrderItem> purchaseOrderItems = new ArrayList<>();
 
-    @Version
-    private Long version;
 
     public PurchaseOrder(Long id) {
         this.id = id;
@@ -62,6 +61,7 @@ public class PurchaseOrder extends AuditingEntity {
                 .item(new Item(itemDto.getItemId()))
                 .price(itemDto.getPrice())
                 .qty(itemDto.getQty())
+                .receivedQty(BigDecimal.ZERO)
                 .totalAmount(itemDto.getPrice().multiply(itemDto.getQty()))
                 .purchaseOrder(this)
                 .build();
@@ -94,5 +94,38 @@ public class PurchaseOrder extends AuditingEntity {
 
     public List<PurchaseOrderItem> getItems() {
         return Collections.unmodifiableList(purchaseOrderItems);
+    }
+
+    public boolean isValidFormStatus(FormStatus formStatusToUpdate) {
+
+        if (formStatusToUpdate.equals(FormStatus.PROCESSING)) {
+            return this.formStatus.equals(FormStatus.READY_TO_PROCESS.getCode());
+        }
+
+        return false;
+    }
+
+    public void updateReceivedItemQtyList(Map<Long, BigDecimal> itemQtyMap) {
+
+        for(PurchaseOrderItem item : purchaseOrderItems) {
+            BigDecimal qty = itemQtyMap.get(item.getItem().getId());
+
+            if(qty == null) continue;
+
+            item.addReceivedQty(qty);
+        }
+    }
+
+    public boolean hasRemainingQty() {
+        BigDecimal remainingQty = purchaseOrderItems.stream()
+                .map(p -> p.getQty().subtract(p.getReceivedQty()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return remainingQty.compareTo(BigDecimal.ZERO) > 0;
+    }
+
+    public boolean isValidToProcess() {
+        return this.formStatus.equals(FormStatus.PROCESSING.getCode())
+                || this.formStatus.equals(FormStatus.READY_TO_PROCESS.getCode());
     }
 }

@@ -1,6 +1,6 @@
 package com.mrthaw.inventory_backend.purchase_order.dto;
 
-import com.mrthaw.inventory_backend.purchase_order.validator.annotation.UniqueItemList;
+import com.mrthaw.inventory_backend.common.validator.UniqueItemList;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

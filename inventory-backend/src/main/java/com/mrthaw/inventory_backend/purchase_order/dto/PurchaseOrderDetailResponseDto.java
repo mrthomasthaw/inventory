@@ -39,6 +39,8 @@ public class PurchaseOrderDetailResponseDto {
 
     private List<PurchaseOrderItemRequestDto> itemList = new ArrayList<>();
 
+    private boolean validToProcess;
+
     public static PurchaseOrderDetailResponseDto toDto(PurchaseOrder entity) {
 
         return PurchaseOrderDetailResponseDto.builder()
@@ -56,6 +58,9 @@ public class PurchaseOrderDetailResponseDto {
                         .stream()
                         .map(PurchaseOrderItemRequestDto::toDto)
                         .toList())
+                .validToProcess(entity.isValidToProcess())
                 .build();
     }
+
+
 }

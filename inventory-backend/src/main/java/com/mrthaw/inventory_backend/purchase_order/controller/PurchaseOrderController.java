@@ -29,8 +29,9 @@ public class PurchaseOrderController {
     }
 
     @PostMapping
-    public ApiResponse<Map<String, Object>> createPurchaseOrder(@Valid @RequestBody PurchaseOrderCreateRequestDto createRequestDto) {
-        return ApiResponse.success(Map.of("purchaseOrderId", purchaseOrderService.createPurchaseOrder(createRequestDto)));
+    public ApiResponse<Map<String, Object>> createPurchaseOrder(@Valid @RequestBody PurchaseOrderCreateRequestDto createRequestDto,
+                                                                @RequestHeader("X-Request-Id") String requestId) {
+        return ApiResponse.success(Map.of("purchaseOrderId", purchaseOrderService.createPurchaseOrder(createRequestDto, requestId)));
     }
 
     @PatchMapping

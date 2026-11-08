@@ -1,5 +1,6 @@
 package com.mrthaw.inventory_backend.purchase_order.service;
 
+import com.mrthaw.inventory_backend.common.dto.CommonItemListRequestDto;
 import com.mrthaw.inventory_backend.common.enum_constant.FormStatus;
 import com.mrthaw.inventory_backend.common.enum_constant.FormType;
 import com.mrthaw.inventory_backend.common.exception.DataNotFoundException;
@@ -7,11 +8,13 @@ import com.mrthaw.inventory_backend.common.exception.InvalidFormStatusException;
 import com.mrthaw.inventory_backend.common.service.FormNoSequenceService;
 import com.mrthaw.inventory_backend.common.util.PageResult;
 
+import com.mrthaw.inventory_backend.goods_received.event.GoodsReceivedEventItem;
 import com.mrthaw.inventory_backend.master_data.business_partner.entity.BusinessPartner;
 import com.mrthaw.inventory_backend.purchase_order.dto.*;
 import com.mrthaw.inventory_backend.purchase_order.entity.PurchaseOrder;
 import com.mrthaw.inventory_backend.purchase_order.jpa_specification.PurchaseOrderSpecification;
 import com.mrthaw.inventory_backend.purchase_order.repo.PurchaseOrderRepo;
+import jakarta.persistence.LockModeType;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +22,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Validated
 @Slf4j
@@ -38,7 +46,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     }
 
     @Override
-    public String createPurchaseOrder(@Valid PurchaseOrderCreateRequestDto createRequestDto) {
+    public String createPurchaseOrder(@Valid PurchaseOrderCreateRequestDto createRequestDto, String requestId) {
 
         log.info("{}.....start...createPurchaseOrder....", Thread.currentThread().getName());
 
@@ -47,6 +55,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
                 .purchaseDate(createRequestDto.getPurchaseDate())
                 .formStatus(FormStatus.READY_TO_PROCESS.getCode())
                 .supplier(new BusinessPartner(createRequestDto.getSupplierId()))
+                //.idempotentKey(requestId)
                 .build();
 
         log.info("{}.....generated form no.... {}", Thread.currentThread().getName(), purchaseOrder.getPurchaseOrderNo());
@@ -87,5 +96,33 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         return purchaseOrderRepo.findById(purchaseOrderId)
                 .map(PurchaseOrderDetailResponseDto::toDto)
                 .orElseThrow(() -> new DataNotFoundException("Purchase order not found"));
+    }
+
+    @Override
+    public PurchaseOrderDetailResponseDto findById(Long purchaseOrderId, LockModeType lockModeType) {
+        return purchaseOrderRepo.findByIdForUpdate(purchaseOrderId, lockModeType)
+                .map(PurchaseOrderDetailResponseDto::toDto)
+                .orElseThrow(() -> new DataNotFoundException("Purchase order not found"));
+    }
+
+    @Override
+    public void updatePurchaseOrderOnGoodsReceived(Long purchaseOrderId, List<GoodsReceivedEventItem> itemList) {
+        PurchaseOrder purchaseOrder = purchaseOrderRepo.findByIdForUpdate(purchaseOrderId, LockModeType.PESSIMISTIC_WRITE)
+                .orElseThrow(() -> new DataNotFoundException("Purchase order not found"));
+
+        if(! purchaseOrder.isValidToProcess())
+            throw new InvalidFormStatusException("Current form status is " + FormStatus.getDescByCode(purchaseOrder.getFormStatus()));
+
+        Map<Long, BigDecimal> itemQtyMap = itemList.stream().collect(
+                Collectors.toMap(GoodsReceivedEventItem::itemId, GoodsReceivedEventItem::qty));
+
+        purchaseOrder.updateReceivedItemQtyList(itemQtyMap);
+
+        if(purchaseOrder.hasRemainingQty())
+            purchaseOrder.setFormStatus(FormStatus.PROCESSING.getCode());
+        else
+            purchaseOrder.setFormStatus(FormStatus.COMPLETE.getCode());
+
+        purchaseOrderRepo.save(purchaseOrder);
     }
 }

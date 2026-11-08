@@ -1,16 +1,17 @@
-package com.mrthaw.inventory_backend.goods_received;
+package com.mrthaw.inventory_backend.goods_received.entity;
 
 import com.mrthaw.inventory_backend.common.entity.AuditingEntity;
 import com.mrthaw.inventory_backend.master_data.item.entity.Item;
-import com.mrthaw.inventory_backend.purchase_order.entity.PurchaseOrder;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,7 +20,7 @@ public class GoodsReceivedItem extends AuditingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long goodsReceivedItemId;
+    private Long id;
 
     @ManyToOne
     private Item item;

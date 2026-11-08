@@ -3,6 +3,7 @@ package com.mrthaw.inventory_backend.purchase_order.jpa_specification;
 import com.mrthaw.inventory_backend.common.util.CommonUtils;
 import com.mrthaw.inventory_backend.purchase_order.entity.PurchaseOrder;
 import com.mrthaw.inventory_backend.purchase_order.dto.PurchaseOrderSearchRequestDto;
+import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -25,8 +26,8 @@ public class PurchaseOrderSpecification {
             if (searchRequestDto.getToDate() != null)
                 predicates.add(cb.lessThanOrEqualTo(root.<LocalDate>get("purchaseDate"), searchRequestDto.getToDate()));
 
-            if (searchRequestDto.getFormStatus() != null)
-                predicates.add(cb.equal(root.get("formStatus"), searchRequestDto.getFormStatus()));
+            if (CommonUtils.isValidList(searchRequestDto.getFormStatus()))
+                predicates.add(root.get("formStatus").in(searchRequestDto.getFormStatus()));
 
             if (searchRequestDto.getSupplierId() != null)
                 predicates.add(cb.equal(root.get("supplier").get("id"), searchRequestDto.getSupplierId()));

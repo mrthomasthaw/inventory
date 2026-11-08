@@ -4,6 +4,7 @@ import com.mrthaw.inventory_backend.common.util.CommonPageSearchRequestDto;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 public class PurchaseOrderSearchRequestDto extends CommonPageSearchRequestDto {
@@ -16,5 +17,5 @@ public class PurchaseOrderSearchRequestDto extends CommonPageSearchRequestDto {
 
     private Long supplierId;
 
-    private Integer formStatus;
+    private List<Integer> formStatus;
 }
