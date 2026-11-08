@@ -26,14 +26,19 @@
       <router-link to="/units" class="hover:bg-indigo-700 px-3 py-2 rounded-md transition font-medium">Units</router-link>
       <router-link to="/items" class="hover:bg-indigo-700 px-3 py-2 rounded-md transition font-medium">Items</router-link>
       <router-link to="/purchase-orders" class="hover:bg-indigo-700 px-3 py-2 rounded-md transition font-medium">Purchase Orders</router-link>
+      <router-link to="/goods-receiveds" class="hover:bg-indigo-700 px-3 py-2 rounded-md transition font-medium">Goods Receiveds</router-link>
+      <router-link to="/sale-orders" class="hover:bg-indigo-700 px-3 py-2 rounded-md transition font-medium">Sale Orders</router-link>
     </div>
   </nav>
 
   <!-- Dynamic Page View Renderer -->
   <router-view></router-view>
+
+  <toast-notification></toast-notification>
 </div>
 
 <!-- Import Your External JS Component File -->
+<script src="/js/components/toast.js"></script>
 <script src="/js/components/user-accounts.js"></script>
 <script src="/js/components/user-roles.js"></script>
 <script src="/js/components/customers.js"></script>
@@ -42,6 +47,8 @@
 <script src="/js/components/units.js"></script>
 <script src="/js/components/items.js"></script>
 <script src="/js/components/purchase-orders.js"></script>
+<script src="/js/components/goods-receiveds.js"></script>
+<script src="/js/components/sale-orders.js"></script>
 
 <!-- Configure Router and Mount App -->
 <script>
@@ -54,6 +61,8 @@
     { path: '/units', component: UnitView },
     { path: '/items', component: ItemView },
     { path: '/purchase-orders', component: PurchaseOrderView },
+    { path: '/goods-receiveds', component: GoodsReceivedView },
+    { path: '/sale-orders', component: SaleOrderView },
     { path: '/', redirect: '/home' } // Auto-redirect root to home
   ];
 
@@ -64,6 +73,13 @@
 
   const { createApp } = Vue;
   const app = createApp({});
+
+  app.component('toast-notification', ToastNotification)
+
+  app.config.globalProperties.$toast = (message, type = 'error') => {
+    useToast().showToast(message, type);
+  };
+
   app.use(router);
   app.mount('#app');
 </script>

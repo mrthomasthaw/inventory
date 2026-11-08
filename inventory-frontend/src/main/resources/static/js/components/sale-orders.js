@@ -1,21 +1,21 @@
-const PurchaseOrderView = {
+const SaleOrderView = {
     template: `
     <div class="max-w-7xl mx-auto p-6">
         
         <!-- Header -->
         <header class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900">Purchase Order Management</h1>
+                <h1 class="text-2xl font-bold text-gray-900">Sale Order Management</h1>
                 <p class="text-sm text-gray-500">Inventory System — Master Data</p>
             </div>
             <div class="flex space-x-3">
                 <button v-if="!isFormOpen" @click="openCreateForm" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-sm text-sm font-medium transition flex items-center space-x-1">
-                    <span>➕ Create Purchase Order</span>
+                    <span>➕ Create Sale Order</span>
                 </button>
                 <button v-if="isFormOpen" @click="closeForm" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg shadow-sm text-sm font-medium transition flex items-center space-x-1">
                     <span>← Back to List</span>
                 </button>
-                <button @click="searchPurchaseOrders" class="px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
+                <button @click="searchSaleOrders" class="px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
                     🔄 Refresh
                 </button>
             </div>
@@ -27,16 +27,16 @@ const PurchaseOrderView = {
             <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 mb-6">
                 <form @submit.prevent="handleSearch" class="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">PO Number</label>
-                        <input type="text" v-model="searchQuery.purchaseOrderNo" placeholder="Search PO No..."
+                        <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">SO Number</label>
+                        <input type="text" v-model="searchQuery.saleOrderNo" placeholder="Search SO No..."
                                class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Supplier</label>
-                        <select v-model.number="searchQuery.supplierId"
+                        <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Customer</label>
+                        <select v-model.number="searchQuery.customerId"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-indigo-500 outline-none">
-                            <option value="">All Suppliers</option>
-                            <option v-for="sup in suppliers" :key="sup.id" :value="sup.id">{{ sup.name }}</option>
+                            <option value="">All Customer</option>
+                            <option v-for="cust in customers" :key="cust.id" :value="cust.id">{{ cust.name }}</option>
                         </select>
                     </div>
                     <div>
@@ -71,11 +71,11 @@ const PurchaseOrderView = {
                 </form>
             </div>
 
-            <!-- Purchase Order Table Panel with Pagination -->
+            <!-- Sale Order Table Panel with Pagination -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col justify-between">
                 <div>
                     <div class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                        <h2 class="font-semibold text-gray-800">Purchase Order List</h2>
+                        <h2 class="font-semibold text-gray-800">Sale Order List</h2>
                         <span class="text-xs font-medium px-2.5 py-1 bg-indigo-100 text-indigo-800 rounded-full">
                             Total: {{ totalCount }}
                         </span>
@@ -86,8 +86,8 @@ const PurchaseOrderView = {
                             <thead>
                                 <tr class="bg-gray-50 border-b border-gray-200 text-gray-500 font-medium">
                                     <th class="p-3 pl-4">No</th>
-                                    <th class="p-3">PO No</th>
-                                    <th class="p-3">Supplier</th>
+                                    <th class="p-3">SO No</th>
+                                    <th class="p-3">Customer</th>
                                     <th class="p-3">Date</th>
                                     <th class="p-3">Total Qty</th>
                                     <th class="p-3">Total Amount (MMK)</th>
@@ -97,32 +97,32 @@ const PurchaseOrderView = {
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
-                                <tr v-if="purchaseOrders.length === 0">
+                                <tr v-if="saleOrders.length === 0">
                                     <td colspan="9" class="text-center py-12 text-gray-400">
-                                        No purchase orders found.
+                                        No sale orders found.
                                     </td>
                                 </tr>
-                                <tr v-for="(po, index) in purchaseOrders" :key="po.id" class="hover:bg-gray-50 transition">
+                                <tr v-for="(so, index) in saleOrders" :key="so.id" class="hover:bg-gray-50 transition">
                                     <td class="p-3 pl-4 font-mono text-xs text-gray-500">{{ (currentPage * pageSize) + index + 1 }}</td>
-                                    <td class="p-3 font-mono font-medium text-indigo-600">{{ po.purchaseOrderNo || '-' }}</td>
-                                    <td class="p-3 text-gray-900 font-medium">{{ po.supplierName || '-' }}</td>
-                                    <td class="p-3 text-gray-600">{{ po.purchaseDate || '-' }}</td>
-                                    <td class="p-3 text-gray-600 font-mono">{{ po.totalQty || '0.00' }}</td>
-                                    <td class="p-3 text-gray-900 font-semibold font-mono">{{ po.totalAmount ? 'MMK ' + po.totalAmount.toFixed(2) : 'MMK 0.00' }}</td>
+                                    <td class="p-3 font-mono font-medium text-indigo-600">{{ so.saleOrderNo || '-' }}</td>
+                                    <td class="p-3 text-gray-900 font-medium">{{ so.customerName || '-' }}</td>
+                                    <td class="p-3 text-gray-600">{{ so.saleOrderDate || '-' }}</td>
+                                    <td class="p-3 text-gray-600 font-mono">{{ so.totalQty || '0.00' }}</td>
+                                    <td class="p-3 text-gray-900 font-semibold font-mono">{{ so.totalAmount ? 'MMK ' + so.totalAmount.toFixed(2) : 'MMK 0.00' }}</td>
                                     <td class="p-3">
                                         <span class="px-2.5 py-1 text-xs font-semibold rounded-full"
                                               :class="{
-                                                  'bg-green-100 text-green-800': getStatusCode(po.formStatus) === 1,
-                                                  'bg-blue-100 text-blue-800': getStatusCode(po.formStatus) === 2,
-                                                  'bg-purple-100 text-purple-800': getStatusCode(po.formStatus) === 3,
-                                                  'bg-amber-100 text-amber-800': getStatusCode(po.formStatus) === 21
+                                                  'bg-green-100 text-green-800': getStatusCode(so.formStatus) === 1,
+                                                  'bg-blue-100 text-blue-800': getStatusCode(so.formStatus) === 2,
+                                                  'bg-purple-100 text-purple-800': getStatusCode(so.formStatus) === 3,
+                                                  'bg-amber-100 text-amber-800': getStatusCode(so.formStatus) === 21
                                               }">
-                                            {{ getStatusLabel(po.formStatus) }}
+                                            {{ getStatusLabel(so.formStatus) }}
                                         </span>
                                     </td>
-                                    <td class="p-3 text-xs text-gray-500">{{ formatDate(po.createdTime) }}</td>
+                                    <td class="p-3 text-xs text-gray-500">{{ formatDate(so.createdTime) }}</td>
                                     <td class="p-3 pr-4 text-right">
-                                        <button @click="editPurchaseOrder(po)" 
+                                        <button @click="editSaleOrder(so)" 
                                                 class="text-xs bg-gray-100 hover:bg-indigo-50 text-indigo-600 font-medium px-3 py-1.5 rounded-md transition border border-gray-200">
                                             ✏️ Edit
                                         </button>
@@ -157,7 +157,7 @@ const PurchaseOrderView = {
         <div v-if="isFormOpen" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
                 <h2 class="text-xl font-bold text-gray-900">
-                    {{ isEditing ? 'Edit Purchase Order (' + form.purchaseOrderNo + ')' : 'Create New Purchase Order' }}
+                    {{ isEditing ? 'Edit Sale Order (' + form.saleOrderNo + ')' : 'Create New Sale Order' }}
                 </h2>
                 <button @click="closeForm" class="text-sm text-gray-500 hover:text-gray-700">✕ Cancel</button>
             </div>
@@ -166,17 +166,17 @@ const PurchaseOrderView = {
                 <!-- Master Info Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 p-4 rounded-xl border border-gray-200">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Supplier *</label>
-                        <select v-model.number="form.supplierId" required
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Customer *</label>
+                        <select v-model.number="form.customerId" required
                                 class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
-                            <option value="" disabled>Select Supplier</option>
-                            <option v-for="sup in suppliers" :key="sup.id" :value="sup.id">{{ sup.name }}</option>
+                            <option value="" disabled>Select Customer</option>
+                            <option v-for="cust in customers" :key="cust.id" :value="cust.id">{{ cust.name }}</option>
                         </select>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Purchase Date *</label>
-                        <input type="date" v-model="form.purchaseDate" required
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Sale Order Date *</label>
+                        <input type="date" v-model="form.saleOrderDate" required
                                class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition">
                     </div>
                 </div>
@@ -184,7 +184,7 @@ const PurchaseOrderView = {
                 <!-- Item List Section -->
                 <div>
                     <div class="flex justify-between items-center mb-3">
-                        <h3 class="text-md font-semibold text-gray-800">Purchase Order Items *</h3>
+                        <h3 class="text-md font-semibold text-gray-800">Sale Order Items *</h3>
                         <button type="button" @click="addItemRow" class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg text-sm font-medium transition border border-indigo-200">
                             ➕ Add Item Row
                         </button>
@@ -262,7 +262,7 @@ const PurchaseOrderView = {
                 <div class="flex items-center space-x-3 pt-4 border-t border-gray-200">
                     <button type="submit" 
                             class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-6 rounded-lg shadow-sm transition">
-                        {{ isEditing ? 'Save Changes' : 'Create Purchase Order' }}
+                        {{ isEditing ? 'Save Changes' : 'Create Sale Order' }}
                     </button>
                     <button type="button" @click="closeForm"
                             class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2.5 px-6 rounded-lg transition">
@@ -276,8 +276,8 @@ const PurchaseOrderView = {
     `,
     data() {
         return {
-            purchaseOrders: [],
-            suppliers: [],
+            saleOrders: [],
+            customers: [],
             itemsList: [],
             totalCount: 0,
             currentPage: 0,
@@ -286,21 +286,21 @@ const PurchaseOrderView = {
             isFormOpen: false,
             isEditing: false,
             searchQuery: {
-                purchaseOrderNo: '',
-                supplierId: '',
+                saleOrderNo: '',
+                customerId: '',
                 fromDate: '',
                 toDate: '',
                 formStatus: ''
             },
             form: {
                 id: null,
-                purchaseOrderNo: '',
-                supplierId: '',
-                purchaseDate: new Date().toISOString().split('T')[0],
+                saleOrderNo: '',
+                customerId: '',
+                saleOrderDate: new Date().toISOString().split('T')[0],
                 itemList: []
             },
-            backendUrl: 'http://localhost:8081/api/v1/purchase-orders',
-            supplierUrl: 'http://localhost:8081/api/v1/business-partners',
+            backendUrl: 'http://localhost:8081/api/v1/sale-orders',
+            customerUrl: 'http://localhost:8081/api/v1/business-partners',
             itemUrl: 'http://localhost:8081/api/v1/items'
         };
     },
@@ -319,9 +319,9 @@ const PurchaseOrderView = {
         }
     },
     mounted() {
-        this.fetchSuppliers();
+        this.fetchCustomers();
         this.fetchItems();
-        this.searchPurchaseOrders();
+        this.searchSaleOrders();
     },
     methods: {
         getStatusCode(status) {
@@ -340,15 +340,19 @@ const PurchaseOrderView = {
             return 'Unknown';
         },
 
-        async fetchSuppliers() {
+        async fetchCustomers() {
             try {
-                const response = await fetch(`${this.supplierUrl}`);
+                const response = await fetch(`${this.customerUrl}/search`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({customer: true})
+                });
                 const result = await response.json();
                 if (response.ok || result.code === 91) {
-                    this.suppliers = (result.data || []).filter(p => p.customer === false || p.isCustomer === false);
+                    this.customers = result.data.list || [];
                 }
             } catch (error) {
-                console.error('Failed to fetch suppliers:', error);
+                console.error('Failed to fetch customer:', error);
             }
         },
 
@@ -364,11 +368,11 @@ const PurchaseOrderView = {
             }
         },
 
-        async searchPurchaseOrders() {
+        async searchSaleOrders() {
             try {
                 const payload = {
-                    purchaseOrderNo: this.searchQuery.purchaseOrderNo || null,
-                    supplierId: this.searchQuery.supplierId !== '' ? parseInt(this.searchQuery.supplierId) : null,
+                    saleOrderNo: this.searchQuery.saleOrderNo || null,
+                    customerId: this.searchQuery.customerId !== '' ? parseInt(this.searchQuery.customerId) : null,
                     fromDate: this.searchQuery.fromDate || null,
                     toDate: this.searchQuery.toDate || null,
                     formStatus: this.searchQuery.formStatus !== '' ? parseInt(this.searchQuery.formStatus) : null,
@@ -385,12 +389,12 @@ const PurchaseOrderView = {
                 const result = await response.json();
                 if (response.ok) {
                     const pageResult = result.data;
-                    this.purchaseOrders = pageResult.list || [];
+                    this.saleOrders = pageResult.list || [];
                     this.totalCount = pageResult.totalCount || 0;
                     this.totalPages = Math.ceil(this.totalCount / this.pageSize) || 1;
                 }
             } catch (error) {
-                console.error('Failed to search purchase orders:', error);
+                console.error('Failed to search sale orders:', error);
             }
         },
 
@@ -402,13 +406,13 @@ const PurchaseOrderView = {
 
         handleSearch() {
             this.currentPage = 0;
-            this.searchPurchaseOrders();
+            this.searchSaleOrders();
         },
 
         resetSearch() {
             this.searchQuery = { purchaseOrderNo: '', supplierId: '', fromDate: '', toDate: '', formStatus: '' };
             this.currentPage = 0;
-            this.searchPurchaseOrders();
+            this.searchSaleOrders();
         },
 
         changePage(direction) {
@@ -420,24 +424,24 @@ const PurchaseOrderView = {
             this.isEditing = false;
             this.form = {
                 id: null,
-                purchaseOrderNo: '',
-                supplierId: '',
-                purchaseDate: new Date().toISOString().split('T')[0],
-                itemList: [{ itemId: '', price: 0, qty: 1 }]
+                saleOrderNo: '',
+                customerId: '',
+                saleOrderDate: new Date().toISOString().split('T')[0],
+                itemList: [{ itemId: '', price: 0, qty: 1 }],
+                requestId: crypto.randomUUID()
             };
             this.isFormOpen = true;
         },
 
-        async editPurchaseOrder(po) {
+        async editSaleOrder(so) {
            try {
                this.isEditing = true;
 
-               const response = await fetch(`${this.backendUrl}/${po.id}`, {
+               const response = await fetch(`${this.backendUrl}/${so.id}`, {
                    method: 'GET',
                    headers: {'Content-Type': 'application/json'}
                });
 
-               //const matchedSupplier = this.suppliers.find(s => s.name === po.supplierName);
                const result = await response.json();
 
                if(response.ok) {
@@ -446,26 +450,17 @@ const PurchaseOrderView = {
                    console.log(data);
                    this.form = {
                        id: data.id,
-                       purchaseOrderNo: data.purchaseOrderNo,
-                       supplierId: data.supplierId,
-                       purchaseDate: data.purchaseDate || new Date().toISOString().split('T')[0],
+                       saleOrderNo: data.saleOrderNo,
+                       customerId: data.customerId,
+                       saleOrderDate: data.saleOrderDate || new Date().toISOString().split('T')[0],
                        itemList: data.itemList?.length ? data.itemList : [{ itemId: '', price: 0, qty: 1 }]
                    };
-
-                   console.log("Hell boy")
-                   // this.form = {
-                   //     id: po.id,
-                   //     purchaseOrderNo: po.purchaseOrderNo,
-                   //     supplierId: matchedSupplier ? matchedSupplier.id : '',
-                   //     purchaseDate: po.purchaseDate || new Date().toISOString().split('T')[0],
-                   //     itemList: po.itemList && po.itemList.length > 0 ? po.itemList : [{ itemId: '', price: 0, qty: 1 }]
-                   // };
                    this.isFormOpen = true;
                }
 
            }
            catch (error) {
-               console.error("Failed to fetch purchase order");
+               console.error("Failed to fetch sale order");
            }
         },
 
@@ -489,22 +484,22 @@ const PurchaseOrderView = {
 
         async submitForm() {
             if (this.form.itemList.length === 0) {
-                alert('Please add at least one item to the purchase order.');
+                this.$toast('Please add at least one item to the sale order.', 'error');
                 return;
             }
 
             if (this.isEditing) {
-                await this.updatePurchaseOrder();
+                await this.updateSaleOrder();
             } else {
-                await this.createPurchaseOrder();
+                await this.createSaleOrder();
             }
         },
 
-        async createPurchaseOrder() {
+        async createSaleOrder() {
             try {
                 const payload = {
-                    purchaseDate: this.form.purchaseDate,
-                    supplierId: parseInt(this.form.supplierId),
+                    saleOrderDate: this.form.saleOrderDate,
+                    customerId: parseInt(this.form.customerId),
                     itemList: this.form.itemList.map(item => ({
                         itemId: parseInt(item.itemId),
                         price: Number(item.price),
@@ -514,28 +509,31 @@ const PurchaseOrderView = {
 
                 const response = await fetch(this.backendUrl, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Request-Id': this.form.requestId
+                    },
                     body: JSON.stringify(payload)
                 });
                 const result = await response.json();
                 if (response.ok) {
-                    alert('Purchase Order created successfully!');
+                    this.$toast('Sale Order created successfully!', 'success');
                     this.isFormOpen = false;
-                    this.searchPurchaseOrders();
+                    this.searchSaleOrders();
                 } else {
-                    alert('Error: ' + (result.message || 'Failed to create purchase order'));
+                    this.$toast(result.message || 'Failed to create sale order', 'error');
                 }
             } catch (error) {
-                console.error('Failed to create purchase order:', error);
+                console.error('Failed to create sale order:', error);
             }
         },
 
-        async updatePurchaseOrder() {
+        async updateSaleOrder() {
             try {
                 const payload = {
                     id: this.form.id,
-                    purchaseDate: this.form.purchaseDate,
-                    supplierId: parseInt(this.form.supplierId),
+                    saleOrderDate: this.form.saleOrderDate,
+                    customerId: parseInt(this.form.customerId),
                     itemList: this.form.itemList.map(item => ({
                         itemId: parseInt(item.itemId),
                         price: Number(item.price),
@@ -550,14 +548,14 @@ const PurchaseOrderView = {
                 });
                 const result = await response.json();
                 if (response.ok) {
-                    alert('Purchase Order updated successfully!');
+                    this.$toast('Sale Order updated successfully!');
                     this.isFormOpen = false;
-                    this.searchPurchaseOrders();
+                    this.searchSaleOrders();
                 } else {
-                    alert('Error: ' + (result.message || 'Failed to update purchase order'));
+                    this.$toast('Error: ' + (result.message || 'Failed to update sale order'));
                 }
             } catch (error) {
-                console.error('Failed to update purchase order:', error);
+                console.error('Failed to update sale order:', error);
             }
         }
     }

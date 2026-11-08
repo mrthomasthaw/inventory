@@ -39,5 +39,11 @@ public class WebConfig implements WebMvcConfigurer {
 
         registry.addViewController("/purchase-orders")
                 .setViewName("index");
+
+        registry.addViewController("/goods-receiveds")
+                .setViewName("index");
+
+        registry.addViewController("/sale-orders")
+                .setViewName("index");
     }
 }
