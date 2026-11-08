@@ -283,7 +283,7 @@ const GoodsReceivedView = {
                 purchaseOrderId: '',
                 itemList: []
             },
-            backendUrl: 'http://localhost:8081/api/v1/goods-received',
+            backendUrl: 'http://localhost:8081/api/v1/goods-receiveds',
             poUrl: 'http://localhost:8081/api/v1/purchase-orders',
             itemUrl: 'http://localhost:8081/api/v1/items'
         };
@@ -328,7 +328,7 @@ const GoodsReceivedView = {
                 const response = await fetch(`${this.poUrl}/search`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ page: 0, pageSize: 100 })
+                    body: JSON.stringify({ formStatus: [1, 2], page: 0, pageSize: 100 })
                 });
                 const result = await response.json();
                 if (response.ok) {

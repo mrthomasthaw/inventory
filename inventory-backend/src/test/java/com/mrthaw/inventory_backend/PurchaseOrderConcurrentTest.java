@@ -7,16 +7,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+@Transactional
 @Slf4j
 @SpringBootTest
 public class PurchaseOrderConcurrentTest {
@@ -35,6 +38,7 @@ public class PurchaseOrderConcurrentTest {
 
         List<Future<String>>  futures = new ArrayList<>();
 
+        String requestId =  UUID.randomUUID().toString();
         int taskCountToExecute = 20; // no of task is actually the task will be carried out by no of available threads
         for(int i = 0; i < taskCountToExecute; i++){
             futures.add(
@@ -46,7 +50,7 @@ public class PurchaseOrderConcurrentTest {
                                 .build();
 
                         log.info("Submitting {}", Thread.currentThread().getName());
-                        return purchaseOrderService.createPurchaseOrder(requestDto);
+                        return purchaseOrderService.createPurchaseOrder(requestDto, requestId);
                     })
             );
         }

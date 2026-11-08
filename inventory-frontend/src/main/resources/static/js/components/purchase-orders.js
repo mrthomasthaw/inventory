@@ -273,6 +273,8 @@ const PurchaseOrderView = {
         </div>
 
     </div>
+    
+    
     `,
     data() {
         return {
@@ -423,7 +425,8 @@ const PurchaseOrderView = {
                 purchaseOrderNo: '',
                 supplierId: '',
                 purchaseDate: new Date().toISOString().split('T')[0],
-                itemList: [{ itemId: '', price: 0, qty: 1 }]
+                itemList: [{ itemId: '', price: 0, qty: 1 }],
+                requestId: crypto.randomUUID()
             };
             this.isFormOpen = true;
         },
@@ -452,14 +455,6 @@ const PurchaseOrderView = {
                        itemList: data.itemList?.length ? data.itemList : [{ itemId: '', price: 0, qty: 1 }]
                    };
 
-                   console.log("Hell boy")
-                   // this.form = {
-                   //     id: po.id,
-                   //     purchaseOrderNo: po.purchaseOrderNo,
-                   //     supplierId: matchedSupplier ? matchedSupplier.id : '',
-                   //     purchaseDate: po.purchaseDate || new Date().toISOString().split('T')[0],
-                   //     itemList: po.itemList && po.itemList.length > 0 ? po.itemList : [{ itemId: '', price: 0, qty: 1 }]
-                   // };
                    this.isFormOpen = true;
                }
 
@@ -514,16 +509,19 @@ const PurchaseOrderView = {
 
                 const response = await fetch(this.backendUrl, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Request-ID': this.form.requestId
+                    },
                     body: JSON.stringify(payload)
                 });
                 const result = await response.json();
                 if (response.ok) {
-                    alert('Purchase Order created successfully!');
+                    this.$toast('Purchase Order created successfully!', 'success');
                     this.isFormOpen = false;
                     this.searchPurchaseOrders();
                 } else {
-                    alert('Error: ' + (result.message || 'Failed to create purchase order'));
+                    this.$toast(result.message || 'Failed to create purchase order', 'error');
                 }
             } catch (error) {
                 console.error('Failed to create purchase order:', error);
@@ -550,11 +548,11 @@ const PurchaseOrderView = {
                 });
                 const result = await response.json();
                 if (response.ok) {
-                    alert('Purchase Order updated successfully!');
+                    this.$toast('Purchase Order updated successfully!', 'success');
                     this.isFormOpen = false;
                     this.searchPurchaseOrders();
                 } else {
-                    alert('Error: ' + (result.message || 'Failed to update purchase order'));
+                    this.$toast(result.message || 'Failed to update purchase order', 'error');
                 }
             } catch (error) {
                 console.error('Failed to update purchase order:', error);
