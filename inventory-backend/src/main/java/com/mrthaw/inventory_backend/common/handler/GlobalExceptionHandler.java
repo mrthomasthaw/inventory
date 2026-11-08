@@ -2,6 +2,8 @@ package com.mrthaw.inventory_backend.common.handler;
 
 import com.mrthaw.inventory_backend.common.exception.DuplicateDataException;
 import com.mrthaw.inventory_backend.common.exception.InvalidFormStatusException;
+import com.mrthaw.inventory_backend.common.exception.ItemMismatchException;
+import com.mrthaw.inventory_backend.common.exception.ItemQtyExceedException;
 import com.mrthaw.inventory_backend.common.response.ApiResponse;
 import com.mrthaw.inventory_backend.common.util.CommonUtils;
 import org.springframework.http.HttpStatus;
@@ -37,6 +39,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidFormStatusException.class)
     public ApiResponse<String> handleException(InvalidFormStatusException er) {
         return ApiResponse.invalidFormStatusError();
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ItemQtyExceedException.class)
+    public ApiResponse<String> handleException(ItemQtyExceedException er) {
+        return ApiResponse.itemQtyExceedError();
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ItemMismatchException.class)
+    public ApiResponse<String> handleException(ItemMismatchException er) {
+        return ApiResponse.itemMismatchError();
     }
 
 }

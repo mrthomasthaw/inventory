@@ -48,7 +48,16 @@ public class ApiResponse<T> {
         return new ApiResponse<>(ApiResponseCode.INTERNAL_SERVER_ERROR.getCode(), ApiResponseCode.INTERNAL_SERVER_ERROR.getDesc(), null);
     }
 
+
     public static ApiResponse<String> invalidFormStatusError() {
         return new ApiResponse<>(ApiResponseCode.INVALID_FORM_STATUS.getCode(), ApiResponseCode.INVALID_FORM_STATUS.getDesc(), null);
+    }
+
+    public static ApiResponse<String> itemQtyExceedError() {
+        return new ApiResponse<>(ApiResponseCode.ITEM_QTY_EXCEED.getCode(), ApiResponseCode.ITEM_QTY_EXCEED.getDesc(), null);
+    }
+
+    public static ApiResponse<String> itemMismatchError() {
+        return new ApiResponse<>(ApiResponseCode.ITEM_MISMATCH.getCode(), ApiResponseCode.ITEM_MISMATCH.getDesc(), null);
     }
 }

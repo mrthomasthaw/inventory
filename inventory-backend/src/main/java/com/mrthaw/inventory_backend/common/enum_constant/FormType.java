@@ -3,10 +3,14 @@ package com.mrthaw.inventory_backend.common.enum_constant;
 
 import lombok.Getter;
 
+import javax.tools.Diagnostic;
+
 @Getter
 public enum FormType {
 
-    PURCHASE_ORDER(1, "Purchase Order");
+    PURCHASE_ORDER(1, "Purchase Order"),
+    GOODS_RECEIVED(2, "Goods Received"),
+    SALE_ORDER(3, "Sale Order");
 
     int code;
 
