@@ -10,8 +10,8 @@ public enum FormType {
 
     PURCHASE_ORDER(1, "Purchase Order"),
     GOODS_RECEIVED(2, "Goods Received"),
-    SALE_ORDER(3, "Sale Order");
-
+    SALE_ORDER(3, "Sale Order"),
+    GOODS_ISSUED(4, "Goods Issued");
     int code;
 
     String desc;

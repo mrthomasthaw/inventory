@@ -42,6 +42,8 @@ public class SaleOrderResponseDto {
 
     private LocalDateTime updatedTime;
 
+    private boolean validFormStatusToProcess;
+
     public static SaleOrderResponseDto toDto(SaleOrder entity) {
         return SaleOrderResponseDto.builder()
                 .id(entity.getId())
@@ -59,6 +61,7 @@ public class SaleOrderResponseDto {
                 .totalAmount(entity.getTotalAmount())
                 .createdTime(entity.getCreatedTime())
                 .updatedTime(entity.getUpdatedTime())
+                .validFormStatusToProcess(entity.isValidFormStatusToProcess())
                 .build();
     }
 }

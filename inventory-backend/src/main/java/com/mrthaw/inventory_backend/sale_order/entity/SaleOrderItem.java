@@ -36,4 +36,12 @@ public class SaleOrderItem extends AuditingEntity {
     @DecimalMin(value = "0.01")
     private BigDecimal totalAmount;
 
+    private BigDecimal issuedQty;
+
+    public void addIssuedQty(BigDecimal qty) {
+        if(issuedQty == null) issuedQty = BigDecimal.ZERO;
+
+        issuedQty = issuedQty.add(qty);
+    }
+
 }
